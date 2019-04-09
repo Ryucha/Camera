@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.util.Log;
 
+import java.io.File;
+
 /**
  * Created by HSI on 2019-04-09.
  */
@@ -31,4 +33,5 @@ public class RyuchaCamera {
 
         return c;
     }
+
 }

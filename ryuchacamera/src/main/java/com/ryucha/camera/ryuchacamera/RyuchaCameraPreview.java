@@ -33,7 +33,7 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch(IOException e){
-            Log.d(TAG, "EROOR setting camera preview: " + e.getMessage() );
+            Log.d(TAG, "ERROR setting camera preview: " + e.getMessage() );
         }
     }
 
