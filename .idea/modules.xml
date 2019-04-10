@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Camera.iml" filepath="$PROJECT_DIR$/Camera.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Camera.iml" filepath="$PROJECT_DIR$/Camera.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ryuchacamera/ryuchacamera.iml" filepath="$PROJECT_DIR$/ryuchacamera/ryuchacamera.iml" />
       <module fileurl="file://$PROJECT_DIR$/ryuchacamera/ryuchacamera.iml" filepath="$PROJECT_DIR$/ryuchacamera/ryuchacamera.iml" />
     </modules>
   </component>
