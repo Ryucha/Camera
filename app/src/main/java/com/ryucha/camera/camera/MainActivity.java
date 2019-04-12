@@ -45,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         if(mCamera != null) {
             mPreview = new RyuchaCameraPreview(this, mCamera);
 
-            FrameLayout preview = findViewById(R.id.camera_preview);
+            final FrameLayout preview = findViewById(R.id.camera_preview);
             preview.addView(mPreview);
+            mPreview.createPreviewCallback(null, this, preview);
+
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/TestPicture";
             File dir = new File(path);
 
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
             orientationEventListener.enable();
             RyuchaCamera.createPictureCallback(path);
-
             captureButton = findViewById(R.id.button_capture);
             captureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
