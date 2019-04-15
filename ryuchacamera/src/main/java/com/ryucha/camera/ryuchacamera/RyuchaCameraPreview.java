@@ -10,6 +10,7 @@ import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -145,6 +146,13 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
         mCamera.setParameters(parameters);
 
         mCamera.startPreview();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+//        return super.onTouchEvent(event);
+
+        return false;
     }
 
     private void touchFocus(Rect r){
