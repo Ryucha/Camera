@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +36,6 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
     private Camera.Parameters parameters;
 
     private Camera.PreviewCallback previewCallback = null;
-    private RyuchaPreviewCallback ryuchaPreviewCallback = null;
 
     private RyuchaCameraPreview preview;
     private ImageView callbackPreview;
@@ -147,40 +147,16 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
         mCamera.startPreview();
     }
 
-    /**
-     *
-     * @param callback  Callback Funtion
-     * @param context   Context
-     * @param view      LayoutView
-     */
-    public void createPreviewCallback(@Nullable RyuchaPreviewCallback callback, Context context, FrameLayout view)
-    {
-        ryuchaPreviewCallback = callback;
-        callbackPreview = new ImageView(context);
-        callbackPreview.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        callbackPreview.setScaleType(ImageView.ScaleType.FIT_XY);
-        view.addView(callbackPreview);
-        previewCallback = new Camera.PreviewCallback() {
-            @Override
-            public void onPreviewFrame(byte[] bytes, Camera camera) {
-                callbackPreview.setBackgroundColor(Color.BLUE);
-//                callbackPreview.setImageBitmap(byteArrayToBitmap(bytes));
-            }
-        };
-        mCamera.setPreviewCallback(previewCallback);
+    private void touchFocus(Rect r){
+        List<Camera.Area> focus = new ArrayList<Camera.Area>();
+
+        focus.add(new Camera.Area(r, 1000));
+
+        parameters.setMeteringAreas(focus);
+        parameters.setFocusAreas(focus);
+
+        mCamera.setParameters(parameters);
     }
-
-    private Bitmap byteArrayToBitmap(byte[] bytes){
-        Camera.Size previewSize = parameters.getPreviewSize();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        YuvImage yuvImage = new YuvImage(bytes, ImageFormat.NV21, previewSize.width, previewSize.height, null);
-        yuvImage.compressToJpeg(new Rect(0,0, previewSize.width, previewSize.height), 10, out);
-        byte[] imageBytes = out.toByteArray();
-
-        Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes , 0, imageBytes .length);
-        return bitmap;
-    }
-
 
 
 

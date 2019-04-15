@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
             final FrameLayout preview = findViewById(R.id.camera_preview);
             preview.addView(mPreview);
-            mPreview.createPreviewCallback(null, this, preview);
 
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/TestPicture";
             File dir = new File(path);
