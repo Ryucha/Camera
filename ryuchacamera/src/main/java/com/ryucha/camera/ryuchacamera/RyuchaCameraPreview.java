@@ -3,11 +3,14 @@ package com.ryucha.camera.ryuchacamera;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +23,7 @@ import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +42,11 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
 
     private Camera.PreviewCallback previewCallback = null;
 
+    private boolean mFocus = false;
     private RyuchaCameraPreview preview;
     private ImageView callbackPreview;
+
+    private Rect focusRect;
 
     public RyuchaCameraPreview(Context context, Camera camera) {
         super(context);
@@ -152,20 +159,52 @@ public class RyuchaCameraPreview extends SurfaceView implements SurfaceHolder.Ca
     public boolean onTouchEvent(MotionEvent event) {
 //        return super.onTouchEvent(event);
 
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            float x = event.getX();
+            float y = event.getY();
+
+            focusRect = new Rect((int)x -100, (int)y-100, (int)x+100, (int)y+100);
+
+            final Rect targetFocusRect = new Rect(focusRect.left * 2000/this.getWidth()-1000 , focusRect.top * 2000/this.getHeight()-1000, focusRect.right * 2000/this.getWidth()-1000, focusRect.bottom * 2000/this.getHeight()-1000);
+            touchFocus(targetFocusRect);
+
+        }
+
         return false;
     }
 
     private void touchFocus(Rect r){
-        List<Camera.Area> focus = new ArrayList<Camera.Area>();
+        try{
+            List<Camera.Area> focus = new ArrayList<Camera.Area>();
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_MACRO);
+            mCamera.cancelAutoFocus();
 
-        focus.add(new Camera.Area(r, 1000));
+            if(parameters.getMaxNumFocusAreas() > 0){
+                focus.add(new Camera.Area(r, 1000));
+                parameters.setMeteringAreas(focus);
+                parameters.setFocusAreas(focus);
+            }
 
-        parameters.setMeteringAreas(focus);
-        parameters.setFocusAreas(focus);
+            mCamera.setParameters(parameters);
+            mCamera.autoFocus(mAtuoAutoFocusCallback);
+            mCamera.startPreview();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
 
-        mCamera.setParameters(parameters);
     }
 
+    Camera.AutoFocusCallback mAtuoAutoFocusCallback = new Camera.AutoFocusCallback() {
+        @Override
+        public void onAutoFocus(boolean b, Camera camera) {
+            camera.cancelAutoFocus();
+            Camera.Parameters params = camera.getParameters();
+            if (!params.getFocusMode().equals(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                camera.setParameters(params);
+            }
+        }
+    };
 
 
  }
